@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Portal | Asesoramiento Técnico & Legal</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- ================= AUTH VIEW ================= -->
+    <main id="view-login" class="app-view active">
+        <div class="login-wrapper">
+            <div class="login-card">
+                <div class="brand-badge">
+                    <span class="gold-icon">🏢</span>
+                    <h2>CONSTRUCCIONES</h2>
+                    <p class="brand-subtitle">Asesoramiento Técnico & Legal S.A.C.</p>
+                </div>
+
+                <form id="form-login" class="login-form">
+                    <div class="input-group">
+                        <label>Perfil de Acceso</label>
+                        <select id="login-role">
+                            <option value="Empleado">Personal / Empleado</option>
+                            <option value="Administrador">Administrador General</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Código de Identificación</label>
+                        <input type="text" id="login-code" placeholder="Ej. TRAB01" autocomplete="username" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Contraseña / PIN</label>
+                        <input type="password" id="login-pin" placeholder="••••••••" autocomplete="current-password" required>
+                    </div>
+                    <button type="submit" class="btn btn-gold w-100">Iniciar Sesión Segura</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- ================= MAIN APP LAYOUT ================= -->
+    <div id="view-dashboard" class="app-view">
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-avatar">🏛️</div>
+                <div class="brand-meta">
+                    <h3>CORP PORTAL</h3>
+                    <span class="gold-text-muted">Servidor Cloudflare D1</span>
+                </div>
+            </div>
+
+            <div class="user-card-mini">
+                <p class="user-name" id="sidebar-user-name">Cargando...</p>
+                <span class="user-badge" id="sidebar-user-role">Empleado</span>
+            </div>
+
+            <nav class="sidebar-nav" id="sidebar-nav">
+                <!-- Inyección Dinámica vía app.js según el Rol -->
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-logout" class="btn btn-logout w-100">
+                    <span>🚪</span> Cerrar Sesión
+                </button>
+            </div>
+        </aside>
+
+        <section class="main-content">
+            <header class="topbar">
+                <h2 id="topbar-title">Control Operativo</h2>
+                <div class="topbar-actions">
+                    <div class="time-chip" id="realtime-clock">--:--:--</div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <!-- ================= EMPLEADO: ASISTENCIA ================= -->
+                <div id="section-emp-attendance" class="dashboard-section active">
+                    <div class="kpi-grid">
+                        <div class="card kpi-card">
+                            <span class="kpi-icon">🕒</span>
+                            <h4>Entrada Registrada</h4>
+                            <p class="kpi-val" id="emp-entry-time">--:--:--</p>
+                            <span class="kpi-status" id="emp-entry-status">Pendiente de registro</span>
+                        </div>
+                        <div class="card kpi-card">
+                            <span class="kpi-icon">⏱️</span>
+                            <h4>Salida Registrada</h4>
+                            <p class="kpi-val" id="emp-exit-time">--:--:--</p>
+                            <span class="kpi-status" id="emp-exit-status">Pendiente de registro</span>
+                        </div>
+                    </div>
+
+                    <div class="card action-card">
+                        <h3>Marcación Digital de Jornada</h3>
+                        <p class="card-caption">Tolerancia de ingreso hasta las 09:40:00. Registros firmados digitalmente.</p>
+                        <div class="action-buttons-group">
+                            <button id="btn-register-entry" class="btn btn-gold btn-lg">🔴 Registrar Entrada</button>
+                            <button id="btn-register-exit" class="btn btn-outline-gold btn-lg" disabled>🔵 Registrar Salida</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= EMPLEADO: TAREAS ================= -->
+                <div id="section-emp-tasks" class="dashboard-section">
+                    <div class="section-header">
+                        <h3>Mis Tareas del Día</h3>
+                        <p class="card-caption">Gestiona tu flujo de trabajo, reportes y comunicación bidireccional.</p>
+                    </div>
+                    <div id="emp-tasks-container" class="task-grid">
+                        <!-- Render Dinámico -->
+                    </div>
+                </div>
+
+                <!-- ================= ADMIN: MONITOREO ================= -->
+                <div id="section-admin-monitoring" class="dashboard-section">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h3>Monitoreo de Asistencia en Tiempo Real</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Empleado</th>
+                                        <th>Código</th>
+                                        <th>Entrada</th>
+                                        <th>Salida</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-admin-attendance-body">
+                                    <!-- Render Dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Supervisión y Aprobación de Tareas</h3>
+                        </div>
+                        <div id="admin-tasks-container" class="task-grid">
+                            <!-- Render Dinámico -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ADMIN: ASIGNACIÓN ================= -->
+                <div id="section-admin-assign" class="dashboard-section">
+                    <div class="card form-card">
+                        <h3>Asignar Nueva Tarea</h3>
+                        <form id="form-create-task" class="grid-form">
+                            <div class="input-group">
+                                <label>Trabajador</label>
+                                <select id="task-assign-worker" required></select>
+                            </div>
+                            <div class="input-group">
+                                <label>Proyecto</label>
+                                <select id="task-assign-project" required></select>
+                            </div>
+                            <div class="input-group">
+                                <label>Fecha & Hora Inicio</label>
+                                <input type="datetime-local" id="task-assign-start" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Fecha & Hora Entrega</label>
+                                <input type="datetime-local" id="task-assign-end" required>
+                            </div>
+                            <div class="input-group full-width">
+                                <label>Descripción del Entregable</label>
+                                <textarea id="task-assign-desc" rows="3" placeholder="Detalles específicos..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-gold full-width">Asignar Tarea al Colaborador</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ================= ADMIN: PERSONAL ================= -->
+                <div id="section-admin-staff" class="dashboard-section">
+                    <div class="card form-card mb-4">
+                        <h3>Alta de Nuevo Personal</h3>
+                        <form id="form-create-worker" class="grid-form">
+                            <div class="input-group">
+                                <label>Nombre Completo</label>
+                                <input type="text" id="staff-name" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Cargo / Especialidad</label>
+                                <input type="text" id="staff-position" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Código Identificador</label>
+                                <input type="text" id="staff-code" placeholder="TRAB02" required>
+                            </div>
+                            <div class="input-group">
+                                <label>PIN de Acceso Inicial</label>
+                                <input type="password" id="staff-pin" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Correo Institucional</label>
+                                <input type="email" id="staff-email">
+                            </div>
+                            <div class="input-group">
+                                <label>Teléfono</label>
+                                <input type="text" id="staff-phone">
+                            </div>
+                            <button type="submit" class="btn btn-gold full-width">Registrar en Base D1</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3>Padrón de Empleados</h3>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Cargo</th>
+                                        <th>Contacto</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-staff-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ADMIN: PROYECTOS ================= -->
+                <div id="section-admin-projects" class="dashboard-section">
+                    <div class="card form-card mb-4">
+                        <h3>Apertura de Proyecto</h3>
+                        <form id="form-create-project" class="grid-form">
+                            <div class="input-group">
+                                <label>Nombre del Proyecto</label>
+                                <input type="text" id="proj-name" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Área / Especialidad</label>
+                                <input type="text" id="proj-area" required>
+                            </div>
+                            <button type="submit" class="btn btn-gold full-width">Crear Proyecto</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h3>Portafolio Activo</h3>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Proyecto</th>
+                                        <th>Área</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-projects-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= ADMIN: BI & ANALÍTICA ================= -->
+                <div id="section-admin-analytics" class="dashboard-section">
+                    <div class="card mb-4">
+                        <div class="grid-form">
+                            <div class="input-group">
+                                <label>Seleccionar Empleado</label>
+                                <select id="bi-worker-select"></select>
+                            </div>
+                            <div class="input-group">
+                                <label>Fecha Inicio</label>
+                                <input type="date" id="bi-start-date">
+                            </div>
+                            <div class="input-group">
+                                <label>Fecha Fin</label>
+                                <input type="date" id="bi-end-date">
+                            </div>
+                            <button id="btn-run-analytics" class="btn btn-gold align-self-end">Ejecutar Auditoría</button>
+                        </div>
+                    </div>
+
+                    <div id="bi-results-container" class="d-none">
+                        <div class="kpi-grid">
+                            <div class="card kpi-card">
+                                <h4>Puntualidad</h4>
+                                <p class="kpi-val text-success" id="bi-kpi-punctual">0</p>
+                                <span class="kpi-status">Llegadas a tiempo</span>
+                            </div>
+                            <div class="card kpi-card">
+                                <h4>Infracciones</h4>
+                                <p class="kpi-val text-danger" id="bi-kpi-tardiness">0</p>
+                                <span class="kpi-status">Tardanzas registradas</span>
+                            </div>
+                            <div class="card kpi-card">
+                                <h4>Eficacia Tareas</h4>
+                                <p class="kpi-val" id="bi-kpi-tasks">0 / 0</p>
+                                <span class="kpi-status">Completadas vs Asignadas</span>
+                            </div>
+                            <div class="card kpi-card">
+                                <h4>Rendimiento</h4>
+                                <p class="kpi-val gold-text" id="bi-kpi-efficiency">0%</p>
+                                <span class="kpi-status">Tasa Global</span>
+                            </div>
+                        </div>
+
+                        <div class="card mt-4">
+                            <h3>Desglose de Desempeño Operativo</h3>
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Proyecto</th>
+                                            <th>Tarea</th>
+                                            <th>Estado Final</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="bi-tasks-table-body"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ================= PERFIL / SEGURIDAD ================= -->
+                <div id="section-profile" class="dashboard-section">
+                    <div class="card form-card">
+                        <h3>Seguridad de la Cuenta</h3>
+                        <p class="card-caption">Actualización de PIN de acceso seguro.</p>
+                        <form id="form-change-password" class="login-form">
+                            <div class="input-group">
+                                <label>Contraseña Actual</label>
+                                <input type="password" id="pass-current" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Nueva Contraseña (Mínimo 6 caracteres)</label>
+                                <input type="password" id="pass-new" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Confirmar Nueva Contraseña</label>
+                                <input type="password" id="pass-confirm" required>
+                            </div>
+                            <button type="submit" class="btn btn-gold">Actualizar Credenciales</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <!-- MODAL DE CHAT INTERNO -->
+    <div id="modal-chat" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h4 id="chat-task-title">Chat de la Tarea</h4>
+                <button class="btn-close" id="btn-close-chat">&times;</button>
+            </div>
+            <div class="chat-messages" id="chat-messages-container"></div>
+            <div class="chat-composer">
+                <input type="text" id="chat-input" placeholder="Escribe un mensaje u observación...">
+                <button id="btn-send-chat" class="btn btn-gold">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
