@@ -1,13 +1,14 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "paginadeasistenciasoficial-api",
-  "main": "src/main.py", 
+  "main": "backend/src/main.py", 
   "compatibility_date": "2026-09-22",
-  "compatibility_flags": [
-    "python_workers" 
-  ],
+  "compatibility_flags": ["disable_python_external_sdk"],
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "disable_python_external_sdk": true  // 👈 SOLUCIÓN OFICIAL: Desactiva el SDK conflictivo a nivel de infraestructura
   },
   "d1_databases": [
     {
@@ -17,3 +18,4 @@
     }
   ]
 }
+
