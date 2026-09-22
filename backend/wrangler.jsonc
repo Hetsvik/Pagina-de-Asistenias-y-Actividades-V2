@@ -3,12 +3,14 @@
   "name": "paginadeasistenciasoficial-api",
   "main": "backend/src/main.py", 
   "compatibility_date": "2026-09-22",
-  "compatibility_flags": ["disable_python_external_sdk"],
+  "compatibility_flags": [
+    "python_workers"
+  ],
   "observability": {
     "enabled": true
   },
   "vars": {
-    "disable_python_external_sdk": true  // 👈 SOLUCIÓN OFICIAL: Desactiva el SDK conflictivo a nivel de infraestructura
+    "disable_python_external_sdk": true
   },
   "d1_databases": [
     {
@@ -18,4 +20,3 @@
     }
   ]
 }
-
