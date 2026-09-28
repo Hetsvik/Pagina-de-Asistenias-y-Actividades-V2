@@ -4,40 +4,30 @@ import json
 async def on_fetch(request, env):
     url = request.url
 
-    # Ejemplo: Login consultando la tabla 'Trabajadores' o 'Administrador'
-    if "/api/login" in url and request.method == "POST":
+    # Ruta de prueba de API
+    if "/api/ping" in url:
+        return Response.new(
+            json.dumps({"status": "ok", "mensaje": "API funcionando perfectamente"}),
+            status=200,
+            headers={"Content-Type": "application/json"}
+        )
+
+    # Consulta a la base de datos D1
+    if "/api/empleados" in url:
         try:
-            body_text = await request.text()
-            data = json.loads(body_text)
-            
-            codigo = data.get("codigo")
-            pin = data.get("pin")
-
-            # Consulta nativa a D1 (SQLite)
-            stmt = env.DB.prepare(
-                "SELECT * FROM Trabajadores WHERE Codigo_Trabajador = ? AND PIN_Acceso = ?"
-            )
-            query = await stmt.bind(codigo, pin).all()
+            stmt = env.DB.prepare("SELECT * FROM Empleados LIMIT 5;")
+            query = await stmt.all()
             results = query.results.to_py()
-
-            if len(results) > 0:
-                return Response.new(
-                    json.dumps({"success": True, "usuario": results[0]}),
-                    status=200,
-                    headers={"Content-Type": "application/json"}
-                )
-            else:
-                return Response.new(
-                    json.dumps({"success": False, "mensaje": "Credenciales inválidas"}),
-                    status=401,
-                    headers={"Content-Type": "application/json"}
-                )
-
+            return Response.new(
+                json.dumps(results),
+                status=200,
+                headers={"Content-Type": "application/json"}
+            )
         except Exception as err:
             return Response.new(
-                json.dumps({"success": False, "error": str(err)}),
+                json.dumps({"error": str(err)}),
                 status=500,
                 headers={"Content-Type": "application/json"}
             )
 
-    return Response.new("Ruta no encontrada", status=404)
+    return Response.new("Backend Python activo en Cloudflare Workers", status=200)
