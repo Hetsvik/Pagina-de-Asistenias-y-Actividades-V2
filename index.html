@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Control de asistencia y actividades corporativas.">
+    <title>Ingresar | Control laboral</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+  </head>
+  <body class="auth-page">
+    <canvas id="gold-wave-canvas"></canvas>
+    <main class="auth-layout">
+      <section class="auth-brand" aria-label="Presentación de la plataforma">
+        <a class="brand" href="index.html" aria-label="Control laboral, inicio"><span class="brand-mark">CL</span><span>Control laboral</span></a>
+        <div class="auth-copy"><p class="eyebrow">Gestión diaria, en un solo lugar</p><h1>Tu jornada, tareas y equipo bajo control.</h1><p>Registra asistencia, sigue actividades y consulta indicadores desde cualquier dispositivo.</p></div>
+        <div class="auth-feature-list" aria-label="Características"><div><span>✓</span> Marcación de entrada y salida</div><div><span>✓</span> Seguimiento de tareas y entregas</div><div><span>✓</span> Panel de administración</div></div>
+      </section>
+      <section class="auth-card-wrap">
+        <form id="login-form" class="auth-card" novalidate>
+          <div><p class="eyebrow">Acceso seguro</p><h2>Bienvenido de nuevo</h2><p class="muted">Ingresa tus datos para continuar.</p></div>
+          <div class="form-field"><label for="login-role">Perfil</label><select id="login-role" name="role"><option value="employee">Empleado</option><option value="admin">Administrador</option></select></div>
+          <div class="form-field"><label for="login-code">Código de usuario</label><input id="login-code" name="code" autocomplete="username" placeholder="Ej. EM0038" required></div>
+          <div class="form-field"><label for="login-pin">Contraseña o PIN</label><input id="login-pin" name="pin" type="password" autocomplete="current-password" inputmode="numeric" placeholder="••••" required></div>
+          <p id="login-message" class="form-message" aria-live="polite"></p><button class="button button-primary button-full" type="submit">Ingresar</button>
+          <p class="auth-note">Versión estática de demostración. Los datos se guardan únicamente en este navegador.</p>
+        </form>
+      </section>
+    </main>
+
+  <!-- Script de autenticación (único) -->
+    <script type="module" src="assets/js/auth.js"></script>
+
+    <!-- SCRIPT DEL FONDO ANIMADO DE ONDAS DORADAS (COMPLETO) -->
+    <script>
+      (function() {
+          const canvas = document.getElementById('gold-wave-canvas');
+          if (!canvas) return;
+          
+          const ctx = canvas.getContext('2d');
+
+          let width = canvas.width = window.innerWidth;
+          let height = canvas.height = window.innerHeight;
+
+          window.addEventListener('resize', () => {
+              width = canvas.width = window.innerWidth;
+              height = canvas.height = window.innerHeight;
+          });
+
+          let step = 0;
+          let animationFrameId = null;
+
+          function drawAbstractWaves() {
+              ctx.clearRect(0, 0, width, height);
+              ctx.lineWidth = 2.2; // Grosor de la línea
+
+              const totalLines = 14; 
+              const waveSets = [
+                  { offsetY: height * 0.3, speedMultiplier: 0.005 }, 
+                  { offsetY: height * 0.6, speedMultiplier: 0.003 }
+              ];
+
+              waveSets.forEach((set) => {
+                  for (let i = 0; i < totalLines; i++) {
+                      ctx.beginPath();
+
+                      let alpha = (1 - (i / totalLines)) * 0.5 + 0.4;
+                      
+                      ctx.strokeStyle = i % 2 === 0 
+                          ? `rgba(255, 223, 0, ${alpha})`   /* Amarillo oro brillante */
+                          : `rgba(234, 179, 8, ${alpha})`;  /* Dorado ámbar intenso */
+
+                      for (let x = 0; x <= width; x += 25) {
+                          let waveFactor = x * 0.0015;
+                          let y = set.offsetY + 
+                                  Math.sin(waveFactor + (step * set.speedMultiplier) + (i * 0.08)) * (140 + (i * 5)) +
+                                  Math.cos((x * 0.003) - (step * 0.004)) * 70;
+
+                          if (x === 0) {
+                              ctx.moveTo(x, y);
+                          } else {
+                              ctx.lineTo(x, y);
+                          }
+                      }
+                      ctx.stroke();
+                  }
+              });
+
+              step += 1;
+              animationFrameId = requestAnimationFrame(drawAbstractWaves);
+          }
+
+          drawAbstractWaves();
+
+          document.addEventListener("visibilitychange", () => {
+              if (document.hidden) {
+                  cancelAnimationFrame(animationFrameId);
+              } else {
+                  drawAbstractWaves();
+              }
+          });
+      })();
+    </script>
+  </body>
+</html>
+
+
+/* 
+  Este código HTML representa una página de inicio de sesión para una plataforma de control laboral. 
+  Incluye un formulario de autenticación con campos para seleccionar el perfil del usuario, ingresar un código de usuario y una contraseña o PIN. 
+  Además, tiene un fondo animado de ondas doradas que se dibuja en un canvas utilizando JavaScript.
+*/
