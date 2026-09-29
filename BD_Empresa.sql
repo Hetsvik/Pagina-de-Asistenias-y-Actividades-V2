@@ -334,3 +334,5 @@ CREATE INDEX IF NOT EXISTS IX_Evaluaciones_Administrador ON Evaluaciones_Rendimi
 
 INSERT INTO Evaluaciones_Rendimiento (ID_Evaluacion, ID_Trabajador, ID_Administrador, Periodo_Texto, Fecha_Inicio, Fecha_Fin, Total_Asistencias, Llegadas_Tiempo, Tardanzas, Total_Tareas, Tareas_Completadas, Eficiencia_Porcentaje, Fecha_Generacion) VALUES
 (1, 9, 1, 'Esta Semana', '2026-09-14', '2026-09-20', 2, 2, 0, 6, 2, 33.30, '2026-09-15 18:12:19');
+
+INSERT OR IGNORE INTO Roles_Sistema (ID_Rol, Nombre_Rol) VALUES (1, 'Admin');

@@ -1,21 +1,22 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "paginadeasistenciasoficial-api",
-  "main": "backend/src/main.py", // <-- Apunta a entry.js
-  "compatibility_date": "2026-09-22",
-  "compatibility_flags": [
-    "python_workers",
-    "disable_python_external_sdk"
-  ],
-  // Archivos estáticos del frontend
-  "assets": {
-    "directory": "./frontend"
-  },
-  "d1_databases": [
-    {
-      "binding": "DB", 
-      "database_name": "DB_Empresa",
-      "database_id": "08f6f1ec-6378-4549-8d5a-8384c96aeb8e"
-    }
-  ]
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "paginadeasistenciasoficial",
+	"main": "backend/src/main.py", // <-- Apunta a entry.js
+	"compatibility_date": "2026-09-22",
+	"compatibility_flags": [
+		"python_workers",
+		"disable_python_external_sdk"
+	],
+	// Archivos estáticos del frontend
+	"assets": {
+		"directory": "./frontend"
+	},
+	"d1_databases": [
+		{
+			"binding": "bd_empresa",
+			"database_name": "bd-empresa",
+			"database_id": "63af0b14-931f-45cd-bfb5-a06ef69906a0",
+			"remote": true
+		}
+	]
 }
